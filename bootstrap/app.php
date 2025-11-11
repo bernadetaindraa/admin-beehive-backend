@@ -13,11 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Aktifkan Sanctum untuk stateful API
-        $middleware->statefulApi();
-
-        // Gunakan middleware CORS bawaan Laravel
-        $middleware->append(HandleCors::class);
+        $middleware->api(prepend: [
+            // Tambahkan middleware ini
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
