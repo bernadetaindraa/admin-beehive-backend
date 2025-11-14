@@ -127,7 +127,7 @@ class ProductController extends Controller
             'flightRange'     => 'flight_range',
             'flightHeight'    => 'flight_height',
             'otherDetails'    => 'other_details',
-            'include'         => 'include',
+            'include'         => 'include_items',
             'packageOptions'  => 'package_options',
             'financing'       => 'financing',
             'basePrice'       => 'base_price',
