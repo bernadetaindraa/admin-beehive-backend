@@ -16,20 +16,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/articles', [ArticleController::class, 'index']);
     Route::get('/articles/categories', [ArticleController::class, 'categories']);
     Route::post('/articles', [ArticleController::class, 'store']);
-    Route::post('/articles/{id}', [ArticleController::class, 'update']);
+    Route::put('/articles/{id}', [ArticleController::class, 'update']);
     Route::delete('/articles/{id}', [ArticleController::class, 'destroy']);
 
     // Careers Routes
     Route::get('/careers', [CareerController::class, 'index']);
     Route::post('/careers', [CareerController::class, 'store']);
-    Route::post('/careers/{id}', [CareerController::class, 'update']);
+    Route::put('/careers/{id}', [CareerController::class, 'update']);
     Route::delete('/careers/{id}', [CareerController::class, 'destroy']);
 
     // Projects Routes
     Route::get('/projects', [ProjectController::class, 'index']);
     Route::get('/projects/dropdowns', [ProjectController::class, 'dropdowns']);
     Route::post('/projects', [ProjectController::class, 'store']);
-    Route::post('/projects/{id}', [ProjectController::class, 'update']);
+    Route::put('/projects/{id}', [ProjectController::class, 'update']);
     Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
 
     Route::get('/products', [ProductController::class, 'index']);

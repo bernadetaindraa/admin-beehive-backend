@@ -45,13 +45,13 @@ class CareerController extends Controller
         $career = Career::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'qualifications' => 'required|string',
+            'title' => 'sometimes|required|string|max:255',
+            'qualifications' => 'sometimes|required|string',
             'benefits' => 'nullable|string',
             'responsibilities' => 'nullable|string',
-            'location' => 'required|string|max:255',
-            'work_type' => 'required|in:WFO,WFH,Hybrid',
-            'deadline' => 'required|date_format:Y-m-d',
+            'location' => 'sometimes|required|string|max:255',
+            'work_type' => 'sometimes|required|in:WFO,WFH,Hybrid',
+            'deadline' => 'sometimes|required|date_format:Y-m-d',
         ]);
 
         if ($validator->fails()) {
@@ -62,7 +62,7 @@ class CareerController extends Controller
 
         return response()->json([
             'message' => 'Career updated successfully',
-            'career' => $career
+            'career' => $career->refresh()
         ]);
     }
 

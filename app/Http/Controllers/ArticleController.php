@@ -36,13 +36,11 @@ class ArticleController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // Upload gambar
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('uploads/articles', 'public');
         }
 
-        // Simpan artikel
         $article = Article::create([
             'title' => $request->title,
             'content' => $request->content,
@@ -50,49 +48,64 @@ class ArticleController extends Controller
             'image' => $imagePath,
         ]);
 
-        // Simpan relasi kategori (max 2)
         $article->categories()->attach($request->categories);
 
         return response()->json([
             'message' => 'Artikel berhasil dibuat',
-            'article' => $article->load('categories'),
+            'article' => [
+                ...$article->toArray(),
+                'image_url' => $imagePath ? asset('storage/' . $imagePath) : null
+            ]
         ], 201);
     }
 
     public function update(Request $request, $id)
     {
-        $article = Article::findOrFail($id);
+        $request->merge(['_method' => $request->input('_method')]);
 
         $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'author' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'categories' => 'required|array|max:2',
+            'title'     => 'required|string|max:255',
+            'content'   => 'required|string',
+            'author'    => 'required|string|max:255',
+            'categories' => 'required|array|min:1|max:2',
             'categories.*' => 'exists:article_categories,id',
+            'image'     => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // Update gambar kalau ada
+        $article = Article::findOrFail($id);
+
+        // Hapus gambar lama jika upload baru
         if ($request->hasFile('image')) {
-            if ($article->image && Storage::disk('public')->exists($article->image)) {
+            if ($article->image) {
                 Storage::disk('public')->delete($article->image);
             }
-            $article->image = $request->file('image')->store('uploads/articles', 'public');
+            $path = $request->file('image')->store('uploads/articles', 'public');
+            $article->image = $path;
         }
 
-        // Update data artikel
-        $article->update($request->only('title', 'content', 'author'));
+        $article->update([
+            'title' => $request->title,
+            'content' => $request->content,
+            'author' => $request->author,
+        ]);
 
-        // Update kategori
         $article->categories()->sync($request->categories);
 
         return response()->json([
-            'message' => 'Artikel berhasil diperbarui',
-            'article' => $article->load('categories'),
+            'message' => 'Artikel diperbarui',
+            'article' => [
+                'id' => $article->id,
+                'title' => $article->title,
+                'content' => $article->content,
+                'author' => $article->author,
+                'image' => $article->image,
+                'image_url' => $article->image ? asset('storage/' . $article->image) : null,
+                'categories' => $article->categories->map(fn($c) => ['id' => $c->id, 'name' => $c->name])->toArray(),
+            ]
         ]);
     }
 
