@@ -34,7 +34,7 @@ class ProjectController extends Controller
             'goal' => 'required|string',
             'product_service_id' => 'required|exists:product_services,id',
             'industry_id' => 'required|exists:industries,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:30000',
         ]);
 
         if ($validator->fails()) {
@@ -73,7 +73,7 @@ class ProjectController extends Controller
             'goal' => 'required|string',
             'product_service_id' => 'required|exists:product_services,id',
             'industry_id' => 'required|exists:industries,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:30000',
         ]);
 
         if ($validator->fails()) {
