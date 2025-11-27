@@ -12,6 +12,8 @@ use App\Http\Controllers\PublicArticleController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::get('/products/public', [ProductController::class, 'indexPublic']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/change-password', [AuthController::class, 'changePassword']);
@@ -42,6 +44,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/products', [ProductController::class, 'store']);
     Route::put('/products/{product}', [ProductController::class, 'update']);
     Route::delete('/products/{product}', [ProductController::class, 'destroy']);
+
+
+    
+
 });
 
 Route::prefix('public')->group(function () {

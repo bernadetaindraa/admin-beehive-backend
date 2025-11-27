@@ -16,6 +16,33 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
+    public function indexPublic(): JsonResponse
+    {
+        $products = Product::query()
+            ->select([
+                'id',
+                'title',
+                'subtitle',
+                'description',
+                'type',
+                'wingspan',
+                'flight_endurance',
+                'flight_range',
+                'flight_height',
+                'other_details',
+                'base_price',
+                'images',
+                'include_items',
+                'financing',
+                // 'category',
+            ])
+            ->latest()
+            ->get();
+
+        return response()->json($products);
+    }
+
+
     public function show(Product $product): JsonResponse
     {
         return response()->json($product);
